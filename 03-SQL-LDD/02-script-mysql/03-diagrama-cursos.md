@@ -1,0 +1,6 @@
+# Diagrama de la Base de Datos cursos
+
+---
+
+![Imagen de cursos](../images/diagrama-cursos-mysql.png)
+

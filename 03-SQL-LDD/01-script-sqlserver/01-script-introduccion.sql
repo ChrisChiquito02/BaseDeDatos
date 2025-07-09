@@ -83,7 +83,7 @@ CREATE TABLE Tabla2
 GO
 
 
---Razón de cardinalidad de 1:1 (Fidelidad)
+--Razï¿½n de cardinalidad de 1:1 (Fidelidad)
 
 CREATE TABLE Employee
 (
@@ -137,7 +137,7 @@ CREATE TABLE Works_On
 	horas int not null,
 	employeeId int not null,
 	projectId int not null,
-	CONSTRAINT ok_works_on
+	CONSTRAINT pk_works_on
 	PRIMARY KEY (employeeId,projectId),
 	CONSTRAINT fk_works_on_employee
 	FOREIGN KEY (employeeId)
