@@ -297,4 +297,120 @@ SELECT p.Num_Pedido AS [Número de Pedido],
  FROM Representantes AS r
  INNER JOIN Oficinas AS o
  ON o.Oficina = r.Oficina_Rep
- GROUP BY o.Ciudad
+ GROUP BY o.Ciudad, r.Nombre
+ ORDER BY o.Ciudad
+
+
+USE NORTHWND
+/*
+Seleccionar el ingreo total por cliente en 1997 y 
+ordenado por el ingreso de forma descendente
+*/
+SELECT  c.CompanyName AS [Cliente ],
+SUM(od.Quantity*od.UnitPrice * (1-od.Discount)) AS [Ingreso Total]
+FROM [Order Details] AS od
+INNER JOIN 
+Orders AS o
+ON o.OrderID = od.OrderID
+INNER JOIN Customers AS c
+ON c.CustomerID = o.CustomerID
+WHERE YEAR (o.OrderDate) = 1997
+GROUP BY c.CompanyName 
+ORDER BY c.CompanyName DESC
+
+
+SELECT  c.CompanyName AS [Cliente ],
+SUM(od.Quantity*od.UnitPrice * (1-od.Discount)) AS [Ingreso Total]
+FROM [Order Details] AS od
+INNER JOIN 
+Orders AS o
+ON o.OrderID = od.OrderID
+INNER JOIN Customers AS c
+ON c.CustomerID = o.CustomerID
+WHERE DATEPART (yy,o.OrderDate) = 1997
+GROUP BY c.CompanyName 
+ORDER BY c.CompanyName 
+
+SELECT  c.CompanyName AS [Cliente ],
+ROUND(SUM(od.Quantity*od.UnitPrice * (1-od.Discount)),2) AS [Ingreso Total]
+FROM [Order Details] AS od
+INNER JOIN 
+Orders AS o
+ON o.OrderID = od.OrderID
+INNER JOIN Customers AS c
+ON c.CustomerID = o.CustomerID
+WHERE YEAR (o.OrderDate) = 1997
+GROUP BY c.CompanyName 
+ORDER BY 2 DESC
+
+
+SELECT  c.CompanyName AS [Cliente ],
+ROUND(SUM(od.Quantity*od.UnitPrice * (1-od.Discount)),2) AS [Ingreso Total]
+FROM [Order Details] AS od
+INNER JOIN 
+Orders AS o
+ON o.OrderID = od.OrderID
+INNER JOIN Customers AS c
+ON c.CustomerID = o.CustomerID
+WHERE YEAR (o.OrderDate) = 1997
+GROUP BY c.CompanyName 
+ORDER BY ROUND(SUM(od.Quantity*od.UnitPrice * (1-od.Discount)),2) DESC
+
+
+SELECT  c.CompanyName AS [Cliente ],
+ROUND(SUM(od.Quantity*od.UnitPrice * (1-od.Discount)),2) AS [Ingreso Total]
+FROM [Order Details] AS od
+INNER JOIN 
+Orders AS o
+ON o.OrderID = od.OrderID
+INNER JOIN Customers AS c
+ON c.CustomerID = o.CustomerID
+WHERE YEAR (o.OrderDate) = 1997
+GROUP BY c.CompanyName 
+ORDER BY [Ingreso Total] DESC
+
+
+SELECT TOP 10 c.CompanyName AS [Cliente ],
+ROUND(SUM(od.Quantity*od.UnitPrice * (1-od.Discount)),2) AS [Ingreso Total]
+FROM [Order Details] AS od
+INNER JOIN 
+Orders AS o
+ON o.OrderID = od.OrderID
+INNER JOIN Customers AS c
+ON c.CustomerID = o.CustomerID
+WHERE YEAR (o.OrderDate) = 1997
+GROUP BY c.CompanyName 
+ORDER BY [Ingreso Total] DESC
+
+
+-- 2) Seleccionar los productos por categoria más vendidos (unidades), 
+-- para alemania ordenados por categoria y dento de categoria por unidad de forma descendente
+
+SELECT c.CategoryName AS [Categoria],
+		p.ProductName AS [Producto],
+		SUM(od.Quantity) AS [Unidades]
+FROM [Order Details] AS od
+INNER JOIN 
+Orders AS o
+ON o.OrderID = od.OrderID
+INNER JOIN
+Products AS p
+ON p.ProductID = od.ProductID
+INNER JOIN 
+Categories AS c
+ON c.CategoryID = p.CategoryID
+WHERE o.ShipCountry = 'Germany'
+GROUP BY c.CategoryName, p.ProductName
+ORDER BY 1 ASC,  [Unidades] DESC
+
+-- 3)Seleccionar empleados con más pedidos realizados por año, 
+-- ordenados por año y por número de pedidos
+
+SELECT YEAR(o.OrderDate) AS [Año],
+       e.FirstName + ' ' + e.LastName AS [Empleado],
+       COUNT(o.OrderID) AS [Número de Pedidos]
+FROM Orders AS o
+INNER JOIN Employees AS e
+ON o.EmployeeID = e.EmployeeID
+GROUP BY YEAR(o.OrderDate), e.FirstName, e.LastName
+ORDER BY [Año] ASC, [Número de Pedidos] DESC
